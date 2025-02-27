@@ -1,14 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsInt,
-  IsOptional,
-  IsString,
-  IsNotEmpty,
-  IsDateString,
-  Min,
-  IsNumber,
-} from 'class-validator';
+import { IsInt, IsOptional, IsString, Min, IsNumber } from 'class-validator';
 
 export class GetJobOfferQueryDto {
   @ApiProperty({ required: false, example: 'Software Engineer' })
