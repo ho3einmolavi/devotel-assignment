@@ -3,8 +3,6 @@ import { JobOfferModule } from '../src/job-offer/job-offer.module'; // Adjust th
 import { WorkerModule } from '../src/workers/worker.module';
 import { ConfigModule } from '@nestjs/config';
 import { loggingMiddleware, PrismaModule } from 'nestjs-prisma';
-import { AppController } from '../src/app.controller';
-import { AppService } from '../src/app.service';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ResponseFormatter } from '../src/common/interceptors/formatter/formatter.interceptor';
 
@@ -29,9 +27,7 @@ import { ResponseFormatter } from '../src/common/interceptors/formatter/formatte
       },
     }),
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseFormatter,

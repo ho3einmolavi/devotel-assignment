@@ -1,6 +1,4 @@
 import { Logger, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { JobOfferModule } from './job-offer/job-offer.module';
 import { ConfigModule } from '@nestjs/config';
 import { loggingMiddleware, PrismaModule } from 'nestjs-prisma';
@@ -31,9 +29,7 @@ import { ResponseFormatter } from './common/interceptors/formatter/formatter.int
     }),
     ScheduleModule.forRoot(),
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseFormatter,
