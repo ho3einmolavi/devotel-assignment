@@ -13,17 +13,17 @@ export class JobOfferService {
     private readonly prisma: PrismaService,
   ) {}
 
-  @Cron('*/5 * * * * *')
-  async saveJobOffers() {
-    for (const provider of this.jobProviders) {
-      const { data } = await axios.get(provider.baseUrl);
-      const jobs = provider.adapter.transform(data);
-      console.log(jobs);
-      // create bulk jobs in the database
-      await this.prisma.jobOffer.createMany({
-        data: jobs,
-        skipDuplicates: true,
-      });
-    }
-  }
+  // @Cron('*/5 * * * * *')
+  // async saveJobOffers() {
+  //   for (const provider of this.jobProviders) {
+  //     const { data } = await axios.get(provider.baseUrl);
+  //     const jobs = provider.adapter.transform(data);
+  //     console.log(jobs);
+  //     // create bulk jobs in the database
+  //     await this.prisma.jobOffer.createMany({
+  //       data: jobs,
+  //       skipDuplicates: true,
+  //     });
+  //   }
+  // }
 }
