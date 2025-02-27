@@ -1,13 +1,14 @@
 import { JobOfferService } from './../../job-offer/job-offer.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 @Injectable()
 export class CronsHandlerWorker {
+  private readonly logger = new Logger(CronsHandlerWorker.name);
   constructor(private readonly jobOfferService: JobOfferService) {}
 
   @Cron(process.env.CRON_CONFIG)
   async syncJobOffers() {
-    console.log('Syncing job offers');
+    this.logger.log('Running cron job to sync job offers');
     return this.jobOfferService.saveJobOffers();
   }
 }

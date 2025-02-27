@@ -60,11 +60,11 @@ export class JobOfferService {
     }
 
     if (minSalary !== undefined) {
-      where.minSalary = { gte: minSalary };
+      where.minSalary = { gte: +minSalary };
     }
 
     if (maxSalary !== undefined) {
-      where.maxSalary = { lte: maxSalary };
+      where.maxSalary = { lte: +maxSalary };
     }
 
     if (title) {

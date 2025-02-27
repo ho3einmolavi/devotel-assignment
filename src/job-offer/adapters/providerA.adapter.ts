@@ -3,7 +3,6 @@ import { UnifiedJobOffer } from '../interfaces/unified-job-offer.interface';
 
 export class ProviderAAdapter implements JobDataAdapter {
   transform(data: any): UnifiedJobOffer[] {
-    console.log('Transforming data from Provider A', data);
     return data.jobs.map((job: any) => {
       let city: string | undefined = undefined;
       let state: string | undefined = undefined;
