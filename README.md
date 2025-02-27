@@ -90,8 +90,8 @@ The project uses **Prisma ORM** to manage a **PostgreSQL** database. The schema 
 
 | Column               | Type          | Description                                      |
 | -------------------- | ------------- | ------------------------------------------------ |
-| `id`                 | `Int`         | Primary key, auto-incremented.                   |
-| `externalId`         | `String`      | Unique identifier from the external job provider. |
+| `id`                 | `Int`         | Primary key, auto-incremented.                    |
+| `externalId`         | `String`      | Identifier from the external job provider.        |
 | `title`              | `String`      | Job title.                                       |
 | `employmentType`     | `String`      | Type of employment (e.g., full-time, part-time).  |
 | `city`               | `String`      | City where the job is located.                    |
@@ -115,7 +115,7 @@ The project uses **Prisma ORM** to manage a **PostgreSQL** database. The schema 
 ```prisma
 model JobOffer {
   id                  Int      @id @default(autoincrement())
-  externalId          String   @unique
+  externalId          String   
   title               String
   employmentType      String?
   city                String?
@@ -133,12 +133,15 @@ model JobOffer {
   datePosted          DateTime
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+
+  @@unique([source, externalId])
 }
 ```
 
 ### **Key Constraints and Indexes**
-- **`externalId`** is marked as `@unique` to prevent duplicate job entries from the same provider.
+- **`@@unique([source, externalId])`** ensures that no duplicate job entries exist for the same `externalId` from the same `source`.
 - **`createdAt`** and **`updatedAt`** are automatically managed timestamps.
+- This design allows multiple providers to post jobs with the same `externalId`, as long as the `source` is different.
 
 ---
 
