@@ -4,6 +4,12 @@
 
 The **Job Syncer** project is a **NestJS-based** application designed to **fetch** and **sync job offers** from multiple external job providers into a **PostgreSQL database**. This project automates the process of synchronizing job listings by running a **cron job** that periodically fetches job data, transforms it to a unified format using the **Adapter Design Pattern**, and stores it in the database.
 
+The project uses **Prisma ORM** for efficient database interactions and ensures data consistency by avoiding duplicate entries. It is built with a **modular architecture** in NestJS, enabling easy scalability and maintainability. Additionally, the project provides comprehensive **Swagger API documentation**, accessible at:
+```
+http://<your-domain>/docs
+```
+This allows for easy exploration and testing of all available endpoints with detailed request and response schemas.
+
 ---
 
 ## **Key Features**
