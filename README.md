@@ -1,73 +1,190 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# **Job Syncer Project - README**
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## **Overview**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+The **Job Syncer** project is a **NestJS-based** application designed to **fetch** and **sync job offers** from multiple external job providers into a **PostgreSQL database**. This project automates the process of synchronizing job listings by running a **cron job** that periodically fetches job data, transforms it to a unified format using the **Adapter Design Pattern**, and stores it in the database.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## **Key Features**
+- **Automated Job Syncing:** Fetches and syncs job offers from multiple external sources at a scheduled interval using **cron jobs**.
+- **Flexible Integration:** Utilizes the **Adapter Design Pattern** to support integration with multiple job providers while maintaining a consistent internal data structure.
+- **Optimized Database Operations:** Efficiently stores job data in a **PostgreSQL database** using **Prisma ORM**, ensuring high performance and data integrity.
+- **Modular Architecture:** Built using **NestJS**, following best practices for scalability, maintainability, and testability.
+- **Comprehensive Testing:** Includes unit and end-to-end testing using **Jest** to ensure code reliability and prevent regressions.
 
-## Installation
+---
 
-```bash
-$ npm install
+## **Tech Stack**
+This project is built using the following technologies:
+
+| Technology    | Description                                         |
+| ------------- | --------------------------------------------------- |
+| **NestJS**    | A progressive Node.js framework for building efficient, reliable, and scalable server-side applications. |
+| **Prisma**    | A next-generation ORM that provides type-safe database access and migrations. |
+| **PostgreSQL**| A powerful, open-source relational database system. |
+| **Jest**      | A testing framework for writing unit and end-to-end tests, ensuring application reliability. |
+| **Axios**     | A promise-based HTTP client for making API requests to external job providers. |
+| **@nestjs/schedule** | A scheduling module used to run the cron job that synchronizes job data periodically. |
+
+---
+
+## **How Cron Works**
+
+### **Purpose of Cron in this Project**
+The **cron job** is responsible for periodically **fetching job offers** from external job providers and **syncing them** with the local database. It ensures the database stays up-to-date with the latest job listings without manual intervention.
+
+### **Implementation Details**
+- Implemented using **`@nestjs/schedule`**, a NestJS module that provides cron-like functionality.
+- The cron job is scheduled using a **CRON_CONFIG** variable, which is defined in the `.env` file.
+- The cron job triggers the `syncJobOffers` method in the `CronsHandlerWorker` service, which:
+  1. Iterates through all job providers.
+  2. Fetches job data using `axios`.
+  3. Transforms the data using the **Adapter Design Pattern**.
+  4. Stores the job offers in the database using Prisma, with **`skipDuplicates: true`** to prevent duplication.
+
+### **Example Configuration**
+
+```env
+CRON_CONFIG=*/5 * * * * *
 ```
 
-## Running the app
+This configuration makes the cron job run every **5 seconds**.
 
-```bash
-# development
-$ npm run start
+### **Cron Execution Flow**
 
-# watch mode
-$ npm run start:dev
+1. **`@Cron(process.env.CRON_CONFIG)`** in `CronsHandlerWorker` starts the cron job.
+2. `syncJobOffers()` method is called.
+3. `syncJobOffers()` iterates over the registered job providers and fetches job data.
+4. The fetched data is transformed into a unified format using the **Adapter Design Pattern**.
+5. The transformed data is stored in **PostgreSQL** using **Prisma ORM**.
 
-# production mode
-$ npm run start:prod
+---
+
+## **Why Use the Adapter Design Pattern**
+
+### **Purpose of Adapter Pattern**
+The **Adapter Design Pattern** is used to:
+- **Decouple the internal logic** from external job provider APIs.
+- **Maintain a consistent internal data structure**, even if different providers return data in various formats.
+- **Easily integrate new job providers** without modifying the core syncing logic.
+
+### **How It Works in This Project**
+- Each job provider has its own **Adapter Class** (e.g., `ProviderAAdapter`, `ProviderBAdapter`) that implements a **common interface** (`JobProvider`).
+- The adapter class:
+  - **Fetches data** using `axios`.
+  - **Transforms the data** into a unified format compatible with the internal database schema.
+- The main sync logic does not need to know the specifics of each provider’s API, as the adapter handles that complexity.
+
+### **Benefits**
+- **Open-Closed Principle:** Easily add new providers by creating new adapters without modifying existing code.
+- **Maintainability:** Changes to a provider’s API require changes only in its adapter.
+- **Consistency:** Internal logic works with a unified data structure regardless of the source.
+
+---
+
+## **Database Schema**
+
+The project uses **Prisma ORM** to manage a **PostgreSQL** database. The schema is defined in the `prisma/schema.prisma` file.
+
+### **Schema Overview**
+
+| Column               | Type          | Description                                      |
+| -------------------- | ------------- | ------------------------------------------------ |
+| `id`                 | `Int`         | Primary key, auto-incremented.                   |
+| `externalId`         | `String`      | Unique identifier from the external job provider. |
+| `title`              | `String`      | Job title.                                       |
+| `employmentType`     | `String`      | Type of employment (e.g., full-time, part-time).  |
+| `city`               | `String`      | City where the job is located.                    |
+| `state`              | `String`      | State or region of the job location.              |
+| `isRemote`           | `Boolean`     | Indicates if the job is remote.                   |
+| `minSalary`          | `Int`         | Minimum salary offered.                          |
+| `maxSalary`          | `Int`         | Maximum salary offered.                          |
+| `currency`           | `String`      | Currency for salary (e.g., USD, EUR).             |
+| `companyName`        | `String`      | Name of the company offering the job.             |
+| `website`            | `String`      | Company's website URL.                           |
+| `industry`           | `String`      | Industry category (e.g., IT, Finance).            |
+| `source`             | `String`      | Source of the job listing (e.g., provider name).  |
+| `experienceRequired` | `Int`         | Years of experience required.                     |
+| `technologies`       | `String[]`    | List of required technologies (e.g., JavaScript, React). |
+| `datePosted`         | `DateTime`    | Date when the job was posted.                     |
+| `createdAt`          | `DateTime`    | Record creation timestamp (auto-generated).       |
+| `updatedAt`          | `DateTime`    | Record last update timestamp (auto-generated).    |
+
+### **Prisma Model Definition**
+
+```prisma
+model JobOffer {
+  id                  Int      @id @default(autoincrement())
+  externalId          String   @unique
+  title               String
+  employmentType      String?
+  city                String?
+  state               String?
+  isRemote            Boolean? @default(false)
+  minSalary           Int?
+  maxSalary           Int?
+  currency            String
+  companyName         String
+  website             String?
+  industry            String?
+  source              String
+  experienceRequired  Int?
+  technologies        String[]
+  datePosted          DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
 ```
 
-## Test
+### **Key Constraints and Indexes**
+- **`externalId`** is marked as `@unique` to prevent duplicate job entries from the same provider.
+- **`createdAt`** and **`updatedAt`** are automatically managed timestamps.
 
-```bash
-# unit tests
-$ npm run test
+---
 
-# e2e tests
-$ npm run test:e2e
+## **Testing**
 
-# test coverage
-$ npm run test:cov
+### **Testing Stack**
+- **Jest** is used for both **unit tests** and **end-to-end (E2E) tests**.
+- **Supertest** is used for making HTTP requests in E2E tests.
+
+### **Test Coverage**
+- **Data Transformation Logic:** Tests each provider’s adapter to ensure consistent data structure.
+- **Scheduler (Cron Job) Functionality:** Verifies that the cron job is triggered according to the configured schedule.
+- **API Endpoints:** Ensures all routes respond with the correct data and status codes.
+- **Integration Tests:** End-to-end testing of the entire job syncing flow.
+
+---
+
+## **Getting Started**
+
+1. **Clone the repository:**
+```sh
+git clone <repo-url>
+cd job-syncer
 ```
 
-## Support
+2. **Install dependencies:**
+```sh
+pnpm install
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+3. **Create and configure `.env` file:**
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/jobSyncer"
+PROVIDER_A_URL="https://assignment.devotel.io/api/provider1/jobs"
+PROVIDER_B_URL="https://assignment.devotel.io/api/provider2/jobs"
+CRON_CONFIG=*/5 * * * * *
+```
 
-## Stay in touch
+4. **Run migrations and start the app:**
+```sh
+npx prisma migrate dev --name init
+pnpm run start:dev
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
-
-Nest is [MIT licensed](LICENSE).
+## **License**
+This project is licensed under the MIT License.
