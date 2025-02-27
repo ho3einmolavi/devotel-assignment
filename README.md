@@ -70,9 +70,8 @@ The **Adapter Design Pattern** is used to:
 - **Easily integrate new job providers** without modifying the core syncing logic.
 
 ### **How It Works in This Project**
-- Each job provider has its own **Adapter Class** (e.g., `ProviderAAdapter`, `ProviderBAdapter`) that implements a **common interface** (`JobProvider`).
+- Each job provider has its own **Adapter Class** (e.g., `ProviderAAdapter`, `ProviderBAdapter`) that implements a **common interface** (`JobDataAdapter`).
 - The adapter class:
-  - **Fetches data** using `axios`.
   - **Transforms the data** into a unified format compatible with the internal database schema.
 - The main sync logic does not need to know the specifics of each provider’s API, as the adapter handles that complexity.
 
