@@ -6,7 +6,7 @@ import { GetJobOffersResponseDto } from './response-dto/get-job-offers.dto';
 import { GetJobOfferQueryDto } from './request-dto/get-job-offers.dto';
 
 @ApiTags('Job Offer')
-@Controller('api/job-offer')
+@Controller('api/job-offers')
 export class JobOfferController {
   constructor(private readonly jobOfferService: JobOfferService) {}
 
@@ -17,7 +17,12 @@ export class JobOfferController {
   async getOffers(
     @Query() query: GetJobOfferQueryDto,
   ): Promise<GetJobOffersResponseDto> {
-    console.log(query);
-    return { jobOffers: [] };
+    const { page = 1, limit = 10, ...filters } = query;
+    const jobOffers = await this.jobOfferService.getOffers(
+      filters,
+      +page,
+      +limit,
+    );
+    return { jobOffers };
   }
 }

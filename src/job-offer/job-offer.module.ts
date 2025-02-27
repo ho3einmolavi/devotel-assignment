@@ -12,5 +12,6 @@ import { JOB_PROVIDERS, JOB_PROVIDERS_TOKEN } from './adapters/providers';
       useValue: JOB_PROVIDERS,
     },
   ],
+  exports: [JobOfferService],
 })
 export class JobOfferModule {}
