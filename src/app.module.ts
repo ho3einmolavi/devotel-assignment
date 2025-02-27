@@ -11,12 +11,12 @@ import { ResponseFormatter } from './common/interceptors/formatter/formatter.int
 
 @Module({
   imports: [
-    JobOfferModule,
-    WorkerModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
     }),
+    JobOfferModule,
+    WorkerModule,
     PrismaModule.forRoot({
       isGlobal: true,
       prismaServiceOptions: {

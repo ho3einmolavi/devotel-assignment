@@ -14,38 +14,34 @@ export class ProviderAAdapter implements JobDataAdapter {
         state = parsedState;
       }
 
-      // 2. Parse the salaryRange: "$93k - $127k" → { minSalary, maxSalary, currency: 'USD' }
       let minSalary: number | undefined;
       let maxSalary: number | undefined;
-      const currency = 'USD'; // default
+      const currency = 'USD';
 
       if (job.details?.salaryRange) {
         const [minRange, maxRange] = job.details.salaryRange
-          .replace(/\$/g, '') // remove '$'
+          .replace(/\$/g, '')
           .split('-')
           .map((s: string) => s.trim().toLowerCase().replace('k', '000'));
-        // e.g. "$93k" => "93k" => "93" + "000" => "93000"
-        // then parse as number
         minSalary = parseFloat(minRange);
         maxSalary = parseFloat(maxRange);
       }
 
-      // 3. Return the unified job offer
       return {
         externalId: job.jobId,
         title: job.title,
-        employmentType: job.details?.type, // e.g., "Full-Time"
+        employmentType: job.details?.type,
         city: city,
         state: state,
-        isRemote: false, // B structure doesn’t specify remote
+        isRemote: false,
         minSalary: minSalary,
         maxSalary: maxSalary,
         currency: currency,
         companyName: job.company?.name,
-        website: undefined, // not provided in B
+        website: undefined,
         industry: job.company?.industry,
         source: 'providerB',
-        experienceRequired: undefined, // not provided
+        experienceRequired: undefined,
         technologies: job.skills || [],
         datePosted: new Date(job.postedDate),
       };
