@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { JobOfferService } from './job-offer.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { StandardResponseFactory } from 'src/common/interceptors/formatter/standard-response.factory';
+import { StandardResponseFactory } from '../common/interceptors/formatter/standard-response.factory';
 import { GetJobOffersResponseDto } from './response-dto/get-job-offers.dto';
 import { GetJobOfferQueryDto } from './request-dto/get-job-offers.dto';
 
